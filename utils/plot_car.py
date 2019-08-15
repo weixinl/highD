@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.plot as plot
+import matplotlib.plot as plt
 import pandas as pd
 import os.path
 
@@ -69,11 +69,26 @@ def get_lane_y_list(_recording_path):
         lane_y_list.append(float(lane_y_str)) 
     return lane_y_list
 
+def get_car_track(_track_path,_car_begin_line_id,_car_frame_num):
+    tracks_df=pd.read_csv(_track_path)
+    x_list=[]
+    y_list=[]
+    for line_id in range(_car_begin_line_id,_car_begin_line_id+_car_frame_num):
+        line_serie=tracks_df.iloc[line_id]
+        x=float(line_serie["x"])
+        y=float(line_serie["y"])
+        x_list.append(x)
+        y_list.append(y)
+    return x_list,y_list
+    
 
-def plot_car(_recording_path,_meta_path,_track_path,_file_id,_vehicle_id):
+
+
+
+def plot_car(_recording_path,_meta_path,_track_path,_file_id,_vehicle_id,_img_path):
+    lane_y_list=get_lane_y_list(_recording_path)
+
     frame_info_path="../infos/frame_num_info_"+str(_file_id)+".txt"
-
-
     frame_num_list=None
     if(os.path.exists(frame_info_path)):
         frame_num_list=restore_frame_num_info(_file_id)
@@ -84,6 +99,19 @@ def plot_car(_recording_path,_meta_path,_track_path,_file_id,_vehicle_id):
     for i in range(_vehicle_id-1):
         car_begin_line_id +=frame_num_list[i]
     car_frame_num=frame_num_list[_vehicle_id-1]
+
+    x_list,y_list=get_car_track(_track_path,car_begin_line_id,car_frame_num)
+
+    x_left=x_list[0]
+    x_right=x_list[car_frame_num-1]
+
+    plt.plot(x_list,y_list)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend()
+    plt.savefig(_img_path)
+
+
     
     
 
@@ -104,4 +132,4 @@ if __name__=="__main__":
 
     stat_dir="../statistics/car_tracks/"
     img_path=stat_dir+"img_"+file_id_str+"_"+str(vehicle_id)+".jpg"
-    plot_car(recording_path,meta_path,track_path,file_id,vehicle_id)
+    plot_car(recording_path,meta_path,track_path,file_id,vehicle_id,img_path)
