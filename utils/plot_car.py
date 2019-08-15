@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.plot as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 import os.path
 
@@ -7,7 +7,7 @@ import os.path
 
 def get_color_by_laneid(_lane_id):
     # lane id: 1-8
-    color=[None,"red","blue","darkviolet","orange","green","magenta","blue","black"]
+    color=[None,"red","blue","darkviolet","orange","green","magenta","blue","brown"]
     return color[_lane_id]
 
 def get_file_id_str(_file_id):
@@ -77,6 +77,7 @@ def get_car_track(_track_path,_car_begin_line_id,_car_frame_num):
         line_serie=tracks_df.iloc[line_id]
         x=float(line_serie["x"])
         y=float(line_serie["y"])
+        # print(line_serie["id"])
         x_list.append(x)
         y_list.append(y)
     return x_list,y_list
@@ -96,24 +97,37 @@ def plot_car(_recording_path,_meta_path,_track_path,_file_id,_vehicle_id,_img_pa
         store_frame_num_info(_recording_path,_track_path,_file_id)
         frame_num_list=restore_frame_num_info(_file_id)
     car_begin_line_id=0
-    for i in range(_vehicle_id-1):
+    for i in range(_vehicle_id):
         car_begin_line_id +=frame_num_list[i]
-    car_frame_num=frame_num_list[_vehicle_id-1]
-
+    car_frame_num=frame_num_list[_vehicle_id]
+    # print("frame_num_list:")
+    # print(frame_num_list)
+    # print("car_frame_num:"+str(car_frame_num))
     x_list,y_list=get_car_track(_track_path,car_begin_line_id,car_frame_num)
 
     x_left=x_list[0]
     x_right=x_list[car_frame_num-1]
 
-    plt.plot(x_list,y_list)
+
+    for lane_y in lane_y_list:
+        plt.plot([x_left,x_right],[lane_y,lane_y],linewidth=1,color="black")
+    plt.plot(x_list,y_list,marker=".",markersize=2)
+
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.legend()
+    # plt.legend()
     plt.savefig(_img_path)
 
 
     
-    
+def plot_one_track(_x_list_list,_y_list_list,_lane_id_list):
+    diff_lane_num=len(_lane_id_list)
+    for pos in range(diff_lane_num):
+        x_list=_x_list_list[pos]
+        y_list=_y_list_list[pos]
+        lane_id=_lane_id_list[pos]
+        tmp_color=get_color_by_laneid(lane_id)
+        plt.plot(x_list,y_list,linewidth=2,color=tmp_color)
 
 
 
