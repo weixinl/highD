@@ -137,23 +137,23 @@ def plot_car(_recording_path,_meta_path,_track_path,_file_id,_vehicle_id,_img_pa
     # print(car_width)
     half_width=car_width/2
 
-    upper_y_list_list=[]
-    lower_y_list_list=[]
-    for y_list in y_list_list:
-        upper_y_list=[]
-        lower_y_list=[]
-        for y in y_list:
-            upper_y_list.append(y+half_width)
-            lower_y_list.append(y-half_width)
-        upper_y_list_list.append(upper_y_list)
-        lower_y_list_list.append(lower_y_list)
+    # upper_y_list_list=[]
+    # lower_y_list_list=[]
+    # for y_list in y_list_list:
+    #     upper_y_list=[]
+    #     lower_y_list=[]
+    #     for y in y_list:
+    #         upper_y_list.append(y+half_width)
+    #         lower_y_list.append(y-half_width)
+    #     upper_y_list_list.append(upper_y_list)
+    #     lower_y_list_list.append(lower_y_list)
 
     
 
 
     plot_one_track(x_list_list,y_list_list,lane_id_list)
-    plot_one_track(x_list_list,upper_y_list_list,lane_id_list)
-    plot_one_track(x_list_list,lower_y_list_list,lane_id_list)
+    # plot_one_track(x_list_list,upper_y_list_list,lane_id_list)
+    # plot_one_track(x_list_list,lower_y_list_list,lane_id_list)
 
         
     # plt.plot(x_list,y_list,marker=".",markersize=2)
